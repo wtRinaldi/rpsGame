@@ -8,7 +8,7 @@ def getInput():
     if answer in moves:
         return answer
     else:
-        getInput()
+        return getInput()
 
 
 def getLearnedSolution(previousMove):
@@ -52,16 +52,18 @@ class RandomPlayer(Player):
 
 class CyclePlayer(Player):
     def __init__(self):
-        self.savedMove = ''
+        self.cycleMove = 0
 
     def move(self):
-        if self.savedMove:
-            return getLearnedSolution(self.savedMove)
+        currentMove = moves[self.cycleMove]
+        if self.cycleMove == len(moves) - 1:
+            self.cycleMove = 0
         else:
-            return (random.choice(moves))
+            self.cycleMove += 1
+        return currentMove
 
     def learn(self, my_move, their_move):
-        self.savedMove = their_move
+        pass
 
 
 class ReflectPlayer(Player):
@@ -107,6 +109,10 @@ class Game:
         else:
             print('** This round ended in a Tie **')
             self.tie += 1
+
+        print(f'Player 1 wins: {self.win}')
+        print(f'Player 1 losses: {self.loss}')
+        print(f'Ties: {self.tie}')
 
         # self.p1.learn(move1, move2)
         self.p2.learn(move2, move1)
